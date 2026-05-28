@@ -6,8 +6,9 @@ import { DragHandle } from '@/components/dashboard/DragHandle';
 import { fromGridLayouts, toGridLayouts } from '@/components/dashboard/layoutMapping';
 import { HoldingsWidget } from '@/components/widgets/HoldingsWidget';
 import { PortfolioSummaryWidget } from '@/components/widgets/PortfolioSummaryWidget';
+import { TransactionsWidget } from '@/components/widgets/TransactionsWidget';
 import { WidgetCard } from '@/components/widgets/WidgetCard';
-import { dashboardWidgets, holdingStates, portfolioSummaryStates } from '@/mocks';
+import { dashboardWidgets, holdingStates, portfolioSummaryStates, transactionStates } from '@/mocks';
 import { useDashboardLayoutStore } from '@/stores/dashboardLayoutStore';
 import type { DashboardWidget } from '@/types';
 
@@ -47,6 +48,10 @@ const renderWidget = (widget: DashboardWidget) => {
 
   if (widget.kind === 'holdings') {
     return <HoldingsWidget state={holdingStates.success} action={action} />;
+  }
+
+  if (widget.kind === 'transactions') {
+    return <TransactionsWidget state={transactionStates.success} action={action} />;
   }
 
   return (
