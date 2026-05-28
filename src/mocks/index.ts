@@ -1,6 +1,7 @@
 export {
   dashboardWidgets,
   defaultDashboardLayout,
+  equityCurveStates,
   holdingStates,
   mockAllocationItems,
   mockApiHoldings,

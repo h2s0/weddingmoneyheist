@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo, type ReactNode } from 'react';
 import { Responsive, WidthProvider, type Layouts } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import { Button } from '@/components/common/Button';
@@ -8,11 +8,23 @@ import { HoldingsWidget } from '@/components/widgets/HoldingsWidget';
 import { PortfolioSummaryWidget } from '@/components/widgets/PortfolioSummaryWidget';
 import { TransactionsWidget } from '@/components/widgets/TransactionsWidget';
 import { WidgetCard } from '@/components/widgets/WidgetCard';
-import { dashboardWidgets, holdingStates, portfolioSummaryStates, transactionStates } from '@/mocks';
+import { WidgetLoading } from '@/components/widgets/WidgetState';
+import {
+  dashboardWidgets,
+  equityCurveStates,
+  holdingStates,
+  portfolioSummaryStates,
+  transactionStates,
+} from '@/mocks';
 import { useDashboardLayoutStore } from '@/stores/dashboardLayoutStore';
 import type { DashboardWidget } from '@/types';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
+const EquityCurveWidget = lazy(async () => {
+  const module = await import('@/components/widgets/EquityCurveWidget');
+
+  return { default: module.EquityCurveWidget };
+});
 
 const breakpoints = {
   desktop: 1180,
@@ -32,45 +44,32 @@ const margin: Record<keyof typeof breakpoints, [number, number]> = {
   mobile: [14, 14],
 };
 
-const widgetIcon = {
-  'portfolio-summary': '💰',
-  holdings: '🛒',
-  transactions: '📒',
-  'equity-curve': '📈',
-} as const;
-
 const renderWidget = (widget: DashboardWidget) => {
   const action = <DragHandle />;
 
-  if (widget.kind === 'summary') {
-    return <PortfolioSummaryWidget state={portfolioSummaryStates.success} action={action} />;
+  switch (widget.kind) {
+    case 'summary':
+      return <PortfolioSummaryWidget state={portfolioSummaryStates.success} action={action} />;
+    case 'holdings':
+      return <HoldingsWidget state={holdingStates.success} action={action} />;
+    case 'transactions':
+      return <TransactionsWidget state={transactionStates.success} action={action} />;
+    case 'equity-curve':
+      return (
+        <Suspense fallback={<ChartWidgetFallback action={action} />}>
+          <EquityCurveWidget state={equityCurveStates.success} action={action} />
+        </Suspense>
+      );
   }
+};
 
-  if (widget.kind === 'holdings') {
-    return <HoldingsWidget state={holdingStates.success} action={action} />;
-  }
-
-  if (widget.kind === 'transactions') {
-    return <TransactionsWidget state={transactionStates.success} action={action} />;
-  }
-
+function ChartWidgetFallback({ action }: { action: ReactNode }) {
   return (
-    <WidgetCard
-      title={widget.title}
-      eyebrow="Phase 4"
-      icon={widgetIcon[widget.id]}
-      action={action}
-      className="h-full"
-    >
-      <div className="flex min-h-0 flex-1 flex-col justify-between gap-4">
-        <p className="text-body text-muted">{widget.description}</p>
-        <div className="rounded-soft border border-dashed border-border bg-background-soft px-4 py-3 text-caption font-semibold text-muted">
-          위젯 콘텐츠는 다음 Phase에서 연결합니다.
-        </div>
-      </div>
+    <WidgetCard title="수익률 추이" eyebrow="차트" icon="📈" action={action} className="h-full">
+      <WidgetLoading title="차트 로딩" description="차트 모듈을 준비하는 중입니다." />
     </WidgetCard>
   );
-};
+}
 
 export function DashboardGrid() {
   const layout = useDashboardLayoutStore((state) => state.layout);

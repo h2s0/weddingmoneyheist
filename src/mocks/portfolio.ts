@@ -289,3 +289,10 @@ export const transactionStates: Record<MockStateKey, MockAsyncState<Transaction[
   empty: { status: 'empty', data: [] },
   success: { status: 'success', data: mockTransactions },
 };
+
+export const equityCurveStates: Record<MockStateKey, MockAsyncState<EquityCurvePoint[]>> = {
+  loading: { status: 'loading' },
+  error: { status: 'error', message: '수익률 추이를 불러오지 못했습니다.' },
+  empty: { status: 'empty', data: [] },
+  success: { status: 'success', data: mockEquityCurve },
+};
