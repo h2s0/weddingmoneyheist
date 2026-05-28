@@ -10,14 +10,19 @@ import { TransactionsWidget } from '@/components/widgets/TransactionsWidget';
 import { WidgetCard } from '@/components/widgets/WidgetCard';
 import { WidgetLoading } from '@/components/widgets/WidgetState';
 import {
+  toAsyncState,
+  useEquityCurveQuery,
+  useHoldingsQuery,
+  usePortfolioSummaryQuery,
+  useTransactionsQuery,
+} from '@/api/hooks/query';
+import {
   dashboardWidgets,
-  equityCurveStates,
-  holdingStates,
-  portfolioSummaryStates,
-  transactionStates,
+  emptyPortfolioSummary,
+  mockEquityCurve,
 } from '@/mocks';
 import { useDashboardLayoutStore } from '@/stores/dashboardLayoutStore';
-import type { DashboardWidget } from '@/types';
+import type { DashboardWidget, EquityCurvePoint, Holding, MockAsyncState, PortfolioSummary, Transaction } from '@/types';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 const EquityCurveWidget = lazy(async () => {
@@ -44,20 +49,27 @@ const margin: Record<keyof typeof breakpoints, [number, number]> = {
   mobile: [14, 14],
 };
 
-const renderWidget = (widget: DashboardWidget) => {
+type DashboardWidgetStates = {
+  summary: MockAsyncState<PortfolioSummary>;
+  holdings: MockAsyncState<Holding[]>;
+  transactions: MockAsyncState<Transaction[]>;
+  equityCurve: MockAsyncState<EquityCurvePoint[]>;
+};
+
+const renderWidget = (widget: DashboardWidget, states: DashboardWidgetStates) => {
   const action = <DragHandle />;
 
   switch (widget.kind) {
     case 'summary':
-      return <PortfolioSummaryWidget state={portfolioSummaryStates.success} action={action} />;
+      return <PortfolioSummaryWidget state={states.summary} action={action} />;
     case 'holdings':
-      return <HoldingsWidget state={holdingStates.success} action={action} />;
+      return <HoldingsWidget state={states.holdings} action={action} />;
     case 'transactions':
-      return <TransactionsWidget state={transactionStates.success} action={action} />;
+      return <TransactionsWidget state={states.transactions} action={action} />;
     case 'equity-curve':
       return (
         <Suspense fallback={<ChartWidgetFallback action={action} />}>
-          <EquityCurveWidget state={equityCurveStates.success} action={action} />
+          <EquityCurveWidget state={states.equityCurve} action={action} />
         </Suspense>
       );
   }
@@ -75,7 +87,21 @@ export function DashboardGrid() {
   const layout = useDashboardLayoutStore((state) => state.layout);
   const setLayout = useDashboardLayoutStore((state) => state.setLayout);
   const resetLayout = useDashboardLayoutStore((state) => state.resetLayout);
+  const summaryQuery = usePortfolioSummaryQuery();
+  const holdingsQuery = useHoldingsQuery();
+  const transactionsQuery = useTransactionsQuery();
+  const equityCurveQuery = useEquityCurveQuery();
   const gridLayouts = useMemo(() => toGridLayouts(layout), [layout]);
+  const widgetStates: DashboardWidgetStates = {
+    summary: toAsyncState(
+      summaryQuery,
+      emptyPortfolioSummary,
+      (summary) => summary.currentValue === 0,
+    ),
+    holdings: toAsyncState(holdingsQuery, [], (holdings) => holdings.length === 0),
+    transactions: toAsyncState(transactionsQuery, [], (transactions) => transactions.length === 0),
+    equityCurve: toAsyncState(equityCurveQuery, mockEquityCurve, (points) => points.length === 0),
+  };
 
   const handleLayoutChange = (_currentLayout: Layouts[string], allLayouts: Layouts) => {
     setLayout(fromGridLayouts(allLayouts, layout));
@@ -109,7 +135,7 @@ export function DashboardGrid() {
       >
         {dashboardWidgets.map((widget) => (
           <div key={widget.id} className="min-h-0">
-            {renderWidget(widget)}
+            {renderWidget(widget, widgetStates)}
           </div>
         ))}
       </ResponsiveGridLayout>

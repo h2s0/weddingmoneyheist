@@ -174,6 +174,18 @@ const toTransactions = (apiTransactions: ApiTransaction[]): Transaction[] =>
 export const mockPortfolioSummary = toPortfolioSummary(mockApiPortfolioSummary);
 export const mockHoldings = toHoldings(mockApiHoldings);
 export const mockTransactions = toTransactions(mockApiTransactions);
+export const emptyPortfolioSummary: PortfolioSummary = {
+  principal: 0,
+  currentValue: 0,
+  cash: 0,
+  totalProfit: 0,
+  totalProfitRate: 0,
+  todayChange: 0,
+  todayChangeRate: 0,
+  startedAt: '2026-05-28',
+  updatedAt: '2026-05-28',
+  currency: 'KRW',
+};
 
 export const mockEquityCurve: EquityCurvePoint[] = [
   { date: '2026-04-29', totalValue: 10_000_000, profitRate: 0 },
@@ -258,21 +270,7 @@ export const defaultDashboardLayout: DashboardLayout = {
 export const portfolioSummaryStates: Record<MockStateKey, MockAsyncState<PortfolioSummary>> = {
   loading: { status: 'loading' },
   error: { status: 'error', message: '포트폴리오 정보를 불러오지 못했습니다.' },
-  empty: {
-    status: 'empty',
-    data: {
-      principal: 0,
-      currentValue: 0,
-      cash: 0,
-      totalProfit: 0,
-      totalProfitRate: 0,
-      todayChange: 0,
-      todayChangeRate: 0,
-      startedAt: '2026-05-28',
-      updatedAt: '2026-05-28',
-      currency: 'KRW',
-    },
-  },
+  empty: { status: 'empty', data: emptyPortfolioSummary },
   success: { status: 'success', data: mockPortfolioSummary },
 };
 
