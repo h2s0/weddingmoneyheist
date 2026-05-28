@@ -8,6 +8,8 @@ import {
   CardTitle,
 } from '@/components/common/Card';
 import { WidgetCard } from '@/components/widgets/WidgetCard';
+import { formatCurrency, formatDate, formatPercent } from '@/lib/formatters';
+import { mockHoldings, mockPortfolioSummary } from '@/mocks';
 
 type Theme = 'light' | 'dark';
 
@@ -33,6 +35,7 @@ const getInitialTheme = (): Theme => {
 
 export function App() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const isTotalProfitPositive = mockPortfolioSummary.totalProfit >= 0;
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -69,24 +72,36 @@ export function App() {
             <div className="flex flex-1 flex-col justify-between gap-8">
               <div>
                 <p className="text-caption font-semibold text-muted">총 평가금액</p>
-                <p className="mt-2 font-display text-display text-foreground">-- 원</p>
+                <p className="mt-2 font-display text-display text-foreground">
+                  {formatCurrency(mockPortfolioSummary.currentValue)}
+                </p>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="rounded-pill bg-profit-background px-3 py-1 text-caption font-semibold text-profit">
-                    수익 준비 중
+                  <span
+                    className={
+                      isTotalProfitPositive
+                        ? 'rounded-pill bg-profit-background px-3 py-1 text-caption font-semibold text-profit'
+                        : 'rounded-pill bg-loss-background px-3 py-1 text-caption font-semibold text-loss'
+                    }
+                  >
+                    {formatCurrency(mockPortfolioSummary.totalProfit)}
                   </span>
                   <span className="rounded-pill bg-background-soft px-3 py-1 text-caption font-semibold text-muted">
-                    목데이터 연결 전
+                    {formatPercent(mockPortfolioSummary.totalProfitRate)}
                   </span>
                 </div>
               </div>
               <div className="grid gap-3 border-t border-dashed border-border pt-4 sm:grid-cols-2">
                 <div>
                   <p className="text-caption text-muted">원금</p>
-                  <p className="mt-1 text-body-lg font-semibold text-foreground">-- 원</p>
+                  <p className="mt-1 text-body-lg font-semibold text-foreground">
+                    {formatCurrency(mockPortfolioSummary.principal)}
+                  </p>
                 </div>
                 <div>
                   <p className="text-caption text-muted">예수금</p>
-                  <p className="mt-1 text-body-lg font-semibold text-foreground">-- 원</p>
+                  <p className="mt-1 text-body-lg font-semibold text-foreground">
+                    {formatCurrency(mockPortfolioSummary.cash)}
+                  </p>
                 </div>
               </div>
             </div>
@@ -118,6 +133,9 @@ export function App() {
               <Button variant="primary">주요 버튼</Button>
               <Button variant="secondary">보조 버튼</Button>
               <Button variant="ghost">가벼운 버튼</Button>
+              <span className="inline-flex h-11 items-center rounded-pill bg-background-soft px-4 text-sm font-semibold text-muted">
+                {mockHoldings.length}개 종목 · {formatDate(mockPortfolioSummary.updatedAt)} 기준
+              </span>
             </CardContent>
           </Card>
         </div>
