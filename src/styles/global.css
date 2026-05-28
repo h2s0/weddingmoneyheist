@@ -71,3 +71,35 @@ button:disabled {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
+.dashboard-grid {
+  min-height: 360px;
+}
+
+.dashboard-grid .react-grid-item {
+  touch-action: none;
+}
+
+.dashboard-grid .react-grid-item.react-draggable-dragging,
+.dashboard-grid .react-grid-item.resizing {
+  z-index: 10;
+}
+
+.dashboard-grid .react-grid-item.react-grid-placeholder {
+  border-radius: var(--radius-card);
+  background: var(--color-pink-strong);
+  opacity: 0.18;
+}
+
+.dashboard-grid .react-resizable-handle::after {
+  border-color: var(--color-faint);
+}
+
+.dashboard-drag-handle {
+  cursor: grab;
+  touch-action: none;
+}
+
+.dashboard-drag-handle:active {
+  cursor: grabbing;
+}
