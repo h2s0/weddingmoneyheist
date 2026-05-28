@@ -32,8 +32,25 @@
   --radius-soft: 14px;
   --radius-card: 22px;
   --radius-panel: 28px;
+  --radius-pill: 999px;
 
+  --space-widget-x: 22px;
+  --space-widget-y: 18px;
+  --space-shell-x: 32px;
+  --space-section-gap: 18px;
+
+  --font-size-caption: 0.75rem;
+  --font-size-body: 0.9375rem;
+  --font-size-body-lg: 1.0625rem;
+  --font-size-title: 1.125rem;
+  --font-size-display: 2.625rem;
+  --line-height-tight: 1.1;
+  --line-height-body: 1.6;
+  --letter-spacing-normal: 0;
+
+  --shadow-soft: 0 1px 0 rgba(42, 37, 51, 0.04), 0 4px 14px -8px rgba(42, 37, 51, 0.12);
   --shadow-card: 0 1px 0 rgba(42, 37, 51, 0.04), 0 4px 14px -8px rgba(42, 37, 51, 0.12);
+  --shadow-panel: 0 1px 0 rgba(42, 37, 51, 0.04), 0 16px 32px -18px rgba(42, 37, 51, 0.18);
   --shadow-lifted: 0 24px 60px -24px rgba(42, 37, 51, 0.32);
 }
 
@@ -68,6 +85,8 @@
   --color-loss: var(--color-coral-strong);
   --color-loss-background: rgba(255, 135, 117, 0.16);
 
+  --shadow-soft: 0 1px 0 rgba(0, 0, 0, 0.4), 0 6px 16px -10px rgba(0, 0, 0, 0.6);
   --shadow-card: 0 1px 0 rgba(0, 0, 0, 0.4), 0 6px 16px -10px rgba(0, 0, 0, 0.6);
+  --shadow-panel: 0 2px 0 rgba(0, 0, 0, 0.3), 0 18px 32px -20px rgba(0, 0, 0, 0.7);
   --shadow-lifted: 0 32px 70px -28px rgba(0, 0, 0, 0.8);
 }

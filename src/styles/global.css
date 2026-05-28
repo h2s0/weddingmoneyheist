@@ -28,6 +28,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 button,
@@ -39,6 +40,15 @@ select {
 
 button {
   cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-pink-strong);
+  outline-offset: 3px;
 }
 
 ::selection {
