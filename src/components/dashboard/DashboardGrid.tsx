@@ -4,9 +4,11 @@ import 'react-grid-layout/css/styles.css';
 import { Button } from '@/components/common/Button';
 import { DragHandle } from '@/components/dashboard/DragHandle';
 import { fromGridLayouts, toGridLayouts } from '@/components/dashboard/layoutMapping';
+import { PortfolioSummaryWidget } from '@/components/widgets/PortfolioSummaryWidget';
 import { WidgetCard } from '@/components/widgets/WidgetCard';
-import { dashboardWidgets } from '@/mocks';
+import { dashboardWidgets, portfolioSummaryStates } from '@/mocks';
 import { useDashboardLayoutStore } from '@/stores/dashboardLayoutStore';
+import type { DashboardWidget } from '@/types';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -34,6 +36,31 @@ const widgetIcon = {
   transactions: '📒',
   'equity-curve': '📈',
 } as const;
+
+const renderWidget = (widget: DashboardWidget) => {
+  const action = <DragHandle />;
+
+  if (widget.kind === 'summary') {
+    return <PortfolioSummaryWidget state={portfolioSummaryStates.success} action={action} />;
+  }
+
+  return (
+    <WidgetCard
+      title={widget.title}
+      eyebrow="Phase 4"
+      icon={widgetIcon[widget.id]}
+      action={action}
+      className="h-full"
+    >
+      <div className="flex min-h-0 flex-1 flex-col justify-between gap-4">
+        <p className="text-body text-muted">{widget.description}</p>
+        <div className="rounded-soft border border-dashed border-border bg-background-soft px-4 py-3 text-caption font-semibold text-muted">
+          위젯 콘텐츠는 다음 Phase에서 연결합니다.
+        </div>
+      </div>
+    </WidgetCard>
+  );
+};
 
 export function DashboardGrid() {
   const layout = useDashboardLayoutStore((state) => state.layout);
@@ -71,20 +98,7 @@ export function DashboardGrid() {
       >
         {dashboardWidgets.map((widget) => (
           <div key={widget.id} className="min-h-0">
-            <WidgetCard
-              title={widget.title}
-              eyebrow="Phase 4"
-              icon={widgetIcon[widget.id]}
-              action={<DragHandle />}
-              className="h-full"
-            >
-              <div className="flex min-h-0 flex-1 flex-col justify-between gap-4">
-                <p className="text-body text-muted">{widget.description}</p>
-                <div className="rounded-soft border border-dashed border-border bg-background-soft px-4 py-3 text-caption font-semibold text-muted">
-                  위젯 콘텐츠는 다음 Phase에서 연결합니다.
-                </div>
-              </div>
-            </WidgetCard>
+            {renderWidget(widget)}
           </div>
         ))}
       </ResponsiveGridLayout>

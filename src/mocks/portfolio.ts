@@ -12,6 +12,8 @@ import type {
   Transaction,
 } from '@/types';
 
+type MockStateKey = 'loading' | 'error' | 'empty' | 'success';
+
 const defaultSwatch = { colorToken: 'var(--color-sky)', accentToken: 'var(--color-sky-strong)' } as const;
 
 const palette = [
@@ -253,7 +255,7 @@ export const defaultDashboardLayout: DashboardLayout = {
   ],
 };
 
-export const portfolioSummaryStates: Record<string, MockAsyncState<PortfolioSummary>> = {
+export const portfolioSummaryStates: Record<MockStateKey, MockAsyncState<PortfolioSummary>> = {
   loading: { status: 'loading' },
   error: { status: 'error', message: '포트폴리오 정보를 불러오지 못했습니다.' },
   empty: {
@@ -274,14 +276,14 @@ export const portfolioSummaryStates: Record<string, MockAsyncState<PortfolioSumm
   success: { status: 'success', data: mockPortfolioSummary },
 };
 
-export const holdingStates: Record<string, MockAsyncState<Holding[]>> = {
+export const holdingStates: Record<MockStateKey, MockAsyncState<Holding[]>> = {
   loading: { status: 'loading' },
   error: { status: 'error', message: '보유 종목을 불러오지 못했습니다.' },
   empty: { status: 'empty', data: [] },
   success: { status: 'success', data: mockHoldings },
 };
 
-export const transactionStates: Record<string, MockAsyncState<Transaction[]>> = {
+export const transactionStates: Record<MockStateKey, MockAsyncState<Transaction[]>> = {
   loading: { status: 'loading' },
   error: { status: 'error', message: '매매 기록을 불러오지 못했습니다.' },
   empty: { status: 'empty', data: [] },
