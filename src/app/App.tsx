@@ -1,32 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Button } from '@/components/common/Button';
 import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
-
-type Theme = 'light' | 'dark';
-
-const THEME_STORAGE_KEY = 'abangi.theme';
-
-const getInitialTheme = (): Theme => {
-  const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
-
-  if (savedTheme === 'light' || savedTheme === 'dark') {
-    return savedTheme;
-  }
-
-  return 'light';
-};
+import { useThemeStore } from '@/stores/themeStore';
 
 export function App() {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const theme = useThemeStore((state) => state.theme);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    window.localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'));
-  };
 
   return (
     <main className="min-h-screen bg-background px-5 py-6 text-foreground transition-colors duration-300 md:px-shell-x">
@@ -44,7 +27,11 @@ export function App() {
             </div>
           </div>
 
-          <Button onClick={toggleTheme} aria-label="라이트 모드와 다크 모드 전환">
+          <Button
+            onClick={toggleTheme}
+            aria-label="라이트 모드와 다크 모드 전환"
+            aria-pressed={theme === 'dark'}
+          >
             {theme === 'light' ? '다크 모드' : '라이트 모드'}
           </Button>
         </header>

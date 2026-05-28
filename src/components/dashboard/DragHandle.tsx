@@ -2,7 +2,7 @@ export function DragHandle() {
   return (
     <button
       type="button"
-      className="dashboard-drag-handle flex size-8 items-center justify-center rounded-lg text-faint transition hover:bg-background-soft hover:text-muted"
+      className="dashboard-drag-handle flex size-10 items-center justify-center rounded-lg text-faint transition hover:bg-background-soft hover:text-muted"
       aria-label="위젯 이동"
     >
       <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none">

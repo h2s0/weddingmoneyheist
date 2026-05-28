@@ -31,7 +31,7 @@ export function Button({
     <button
       type={type}
       className={classNames(
-        'inline-flex items-center justify-center gap-2 rounded-pill border font-semibold shadow-soft transition duration-150 disabled:opacity-50',
+        'inline-flex touch-manipulation items-center justify-center gap-2 rounded-pill border font-semibold shadow-soft transition duration-150 disabled:opacity-50',
         buttonVariants[variant],
         buttonSizes[size],
         className,

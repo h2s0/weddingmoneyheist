@@ -82,10 +82,12 @@ export function DashboardGrid() {
   };
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4" aria-labelledby="dashboard-title">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="font-display text-2xl font-semibold text-foreground">대시보드</h2>
+          <h2 id="dashboard-title" className="font-display text-2xl font-semibold text-foreground">
+            대시보드
+          </h2>
           <p className="mt-1 text-sm text-muted">핸들을 잡아 이동하고 모서리에서 크기를 조절합니다.</p>
         </div>
         <Button onClick={resetLayout}>레이아웃 초기화</Button>
